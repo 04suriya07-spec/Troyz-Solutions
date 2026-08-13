@@ -166,7 +166,7 @@ body {
   font-family: var(--font-mono, monospace);
   font-size: 0.65rem;
   letter-spacing: 3px;
-  color: var(--text-muted);
+  color: var(--c-teal);
 }
 
 .nav-links {
