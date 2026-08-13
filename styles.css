@@ -158,7 +158,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 800; line-height
 .hero-content { position: relative; z-index: 2; max-width: 900px; margin: 0 auto; width: 100%; }
 .hero-header-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 40px; border-left: 2px solid var(--accent-primary); padding-left: 16px; }
 .hero-top-text { font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 2px; line-height: 1.8; color: var(--text-muted); }
-.hero-title { font-size: clamp(3.5rem, 8vw, 7rem); line-height: 1; margin-bottom: 32px; }
+.hero-title { font-size: clamp(2.5rem, 6vw, 5.5rem); line-height: 1.1; margin-bottom: 32px; white-space: nowrap; }
+.step-1 { display: inline-block; }
+.step-2 { display: inline-block; margin-left: 4vw; }
+.step-3 { display: inline-block; margin-left: 8vw; }
 .hero-sub { font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-main); margin-bottom: 48px; max-width: 600px; }
 .hero-actions { display: flex; gap: 16px; }
 
