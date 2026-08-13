@@ -996,38 +996,7 @@ function initCardAnimations() {
 }
 
 // ============================================================
-// PORTFOLIO RENDER (Public Grid)
-// ============================================================
-function renderPortfolio() {
-  const grid = document.getElementById('portfolioGrid');
-  if (!grid) return;
-  
-  // Show all projects except "Other"
-  const publicProjects = PROJECTS.filter(p => p.id !== 'other-projects');
-  
-  grid.innerHTML = publicProjects.map(p => `
-    <div class="project-card" tabindex="0">
-      <div class="card-header">
-        <div class="card-icon ${p.iconClass}" aria-hidden="true">${p.icon}</div>
-        <div class="card-title-group">
-          <h3 class="card-title">${p.name}</h3>
-          <span class="card-domain">${getDomainLabel(p.domain)}</span>
-        </div>
-        <div class="card-links">
-          ${p.githubUrl ? `<a href="${p.githubUrl}" target="_blank" class="icon-btn" aria-label="GitHub Repo">&#128279;</a>` : ''}
-          ${p.liveUrl ? `<a href="${p.liveUrl}" target="_blank" class="icon-btn" aria-label="Live Demo">&#9654;&#65039;</a>` : ''}
-        </div>
-      </div>
-      <p class="card-desc">${p.description}</p>
-      <div class="card-meta">
-        <span class="badge badge-lang ${p.language.toLowerCase()}">${p.language}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ============================================================
-// SCROLL REVEAL & CURSOR GLOW
+// SCROLL REVEAL
 // ============================================================
 function initScrollReveal() {
   const reveals = document.querySelectorAll('.reveal');
@@ -1040,15 +1009,6 @@ function initScrollReveal() {
     });
   }, { threshold: 0.1 });
   reveals.forEach(r => observer.observe(r));
-}
-
-function initCursorGlow() {
-  const glow = document.getElementById('cursor-glow');
-  if (!glow) return;
-  document.addEventListener('mousemove', (e) => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-  });
 }
 
 // ============================================================
@@ -1136,7 +1096,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (statTotal) statTotal.textContent = PROJECTS.length;
 
   renderProjects();
-  renderPortfolio();
   initFilters();
   initForm();
   initNavScroll();
@@ -1144,7 +1103,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initClaimBtn();
   initCounters();
   initScrollReveal();
-  initCursorGlow();
   initContactForm();
 
   // Animate cards after render

@@ -33,8 +33,8 @@
   function draw() {
     ctx.clearRect(0, 0, width, height);
     
-    // Emerald green / Charcoal color palette for particles
-    ctx.fillStyle = 'rgba(16, 185, 129, 0.8)';
+    // Lime green / Black color palette for particles
+    ctx.fillStyle = 'rgba(190, 242, 100, 0.8)';
     
     particles.forEach((p, i) => {
       p.x += p.vx;
@@ -45,7 +45,7 @@
       
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
+      ctx.fillStyle = `rgba(190, 242, 100, ${p.alpha})`;
       ctx.fill();
       
       // Draw connecting lines
@@ -59,7 +59,7 @@
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(16, 185, 129, ${0.15 * (1 - dist / 120)})`;
+          ctx.strokeStyle = `rgba(190, 242, 100, ${0.15 * (1 - dist / 120)})`;
           ctx.stroke();
         }
       }
