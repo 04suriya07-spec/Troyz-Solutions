@@ -36,6 +36,7 @@ const PROJECTS = [
     ],
     icon: '🤖',
     iconClass: 'card-icon-ai',
+    image: 'assets/ai_friend.png',
     createdAt: '2026-02-01',
     updatedAt: '2026-02-23',
     openIssues: 3,
@@ -61,6 +62,7 @@ const PROJECTS = [
     ],
     icon: '🌐',
     iconClass: 'card-icon-community',
+    image: 'assets/communit_app.png',
     createdAt: '2026-01-11',
     updatedAt: '2026-01-15',
     openIssues: 0,
@@ -86,6 +88,7 @@ const PROJECTS = [
     ],
     icon: '⚡',
     iconClass: 'card-icon-platform',
+    image: 'assets/nexus_v2.png',
     createdAt: '2026-05-07',
     updatedAt: '2026-08-13',
     openIssues: 0,
@@ -161,6 +164,7 @@ const PROJECTS = [
     ],
     icon: '📈',
     iconClass: 'card-icon-fintech',
+    image: 'assets/algo_bot.png',
     createdAt: '2026-02-20',
     updatedAt: '2026-02-20',
     openIssues: 0,
@@ -186,6 +190,7 @@ const PROJECTS = [
     ],
     icon: '✨',
     iconClass: 'card-icon-ai',
+    image: 'assets/mayai.png',
     createdAt: '2026-05-22',
     updatedAt: '2026-05-22',
     openIssues: 0,
@@ -211,6 +216,7 @@ const PROJECTS = [
     ],
     icon: '💰',
     iconClass: 'card-icon-fintech',
+    image: 'assets/fin_app.png',
     createdAt: '2025-12-25',
     updatedAt: '2025-12-25',
     openIssues: 0,
@@ -236,6 +242,7 @@ const PROJECTS = [
     ],
     icon: '⚙️',
     iconClass: 'card-icon-fintech',
+    image: 'assets/backtest.png',
     createdAt: '2026-08-01',
     updatedAt: '2026-08-13',
     openIssues: 0,
@@ -506,10 +513,15 @@ function renderProjects() {
       : `<span class="badge badge-status-open">Open</span>`;
 
     return `
-    <article class="project-card" role="listitem" tabindex="0"
+    <article class="project-card youtube-style-card" role="listitem" tabindex="0"
       data-id="${p.id}" aria-label="${p.name} project card">
+      <div class="card-thumbnail-wrap">
+        <img src="${p.image || 'assets/ai_friend.png'}" alt="${p.name}" class="card-thumbnail" loading="lazy"/>
+        <div class="thumbnail-overlay">
+          <span class="trend-pill">${p.trendScore}/100 TREND</span>
+        </div>
+      </div>
       <div class="card-top">
-        <div class="card-icon ${p.iconClass}" aria-hidden="true">${p.icon}</div>
         <div class="card-badges">
           <span class="badge badge-lang ${p.language.toLowerCase()}">${p.language}</span>
           <span class="badge badge-domain">${getDomainLabel(p.domain)}</span>
@@ -519,15 +531,6 @@ function renderProjects() {
       <div class="card-body">
         <h3 class="card-name">${p.name}</h3>
         <p class="card-desc">${p.description}</p>
-      </div>
-      <div class="card-trend">
-        <div class="trend-header">
-          <span class="trend-label">Market Trend Score</span>
-          <span class="trend-score ${getTrendClass(p.trendScore)}">${getTrendEmoji(p.trendScore)} ${p.trendScore}/100</span>
-        </div>
-        <div class="trend-bar" role="progressbar" aria-valuenow="${p.trendScore}" aria-valuemin="0" aria-valuemax="100" aria-label="Trend score ${p.trendScore} out of 100">
-          <div class="trend-fill ${getFillClass(p.trendScore)}" style="width: 0%" data-width="${p.trendScore}%"></div>
-        </div>
       </div>
       <div class="card-footer">
         <div class="card-meta">
