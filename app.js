@@ -995,6 +995,123 @@ function initCardAnimations() {
   });
 }
 
+// ============================================================
+// PORTFOLIO RENDER (Public Grid)
+// ============================================================
+function renderPortfolio() {
+  const grid = document.getElementById('portfolioGrid');
+  if (!grid) return;
+  
+  // Show all projects except "Other"
+  const publicProjects = PROJECTS.filter(p => p.id !== 'other-projects');
+  
+  grid.innerHTML = publicProjects.map(p => `
+    <div class="project-card" tabindex="0">
+      <div class="card-header">
+        <div class="card-icon ${p.iconClass}" aria-hidden="true">${p.icon}</div>
+        <div class="card-title-group">
+          <h3 class="card-title">${p.name}</h3>
+          <span class="card-domain">${getDomainLabel(p.domain)}</span>
+        </div>
+        <div class="card-links">
+          ${p.githubUrl ? `<a href="${p.githubUrl}" target="_blank" class="icon-btn" aria-label="GitHub Repo">&#128279;</a>` : ''}
+          ${p.liveUrl ? `<a href="${p.liveUrl}" target="_blank" class="icon-btn" aria-label="Live Demo">&#9654;&#65039;</a>` : ''}
+        </div>
+      </div>
+      <p class="card-desc">${p.description}</p>
+      <div class="card-meta">
+        <span class="badge badge-lang ${p.language.toLowerCase()}">${p.language}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// SCROLL REVEAL & CURSOR GLOW
+// ============================================================
+function initScrollReveal() {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+}
+
+function initCursorGlow() {
+  const glow = document.getElementById('cursor-glow');
+  if (!glow) return;
+  document.addEventListener('mousemove', (e) => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+}
+
+// ============================================================
+// PUBLIC CONTACT FORM
+// ============================================================
+function initContactForm() {
+  const form = document.getElementById('contactForm');
+  const result = document.getElementById('contactFormResult');
+  if (!form) return;
+  
+  // Update Access Key dynamically if set in config
+  if (WEB3FORMS_ACCESS_KEY) {
+    document.getElementById('contactAccessKey').value = WEB3FORMS_ACCESS_KEY;
+  }
+  
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!WEB3FORMS_ACCESS_KEY) {
+      result.textContent = "Contact form is disabled (No Access Key configured in app.js).";
+      result.className = "form-result error";
+      result.removeAttribute('hidden');
+      return;
+    }
+    
+    const formData = new FormData(form);
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+    
+    result.textContent = "Sending...";
+    result.className = "form-result";
+    result.removeAttribute('hidden');
+    
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json
+    })
+    .then(async (response) => {
+      let json = await response.json();
+      if (response.status == 200) {
+        result.textContent = "Message sent successfully! We'll be in touch.";
+        result.className = "form-result success";
+        form.reset();
+      } else {
+        result.textContent = json.message || "Failed to send message.";
+        result.className = "form-result error";
+      }
+    })
+    .catch(error => {
+      result.textContent = "Something went wrong! Please check your network.";
+      result.className = "form-result error";
+    })
+    .finally(() => {
+      setTimeout(() => {
+        result.setAttribute('hidden', '');
+      }, 5000);
+    });
+  });
+}
+
 // Add keyframe via JS (can't do it in CSS for dynamic elements)
 const style = document.createElement('style');
 style.textContent = `
@@ -1014,13 +1131,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.claimed[p.id]) p.status = 'claimed';
   });
 
+  // Dynamic Total Stats
+  const statTotal = document.getElementById('statTotalProjects');
+  if (statTotal) statTotal.textContent = PROJECTS.length;
+
   renderProjects();
+  renderPortfolio();
   initFilters();
   initForm();
   initNavScroll();
   initModalDismiss();
   initClaimBtn();
   initCounters();
+  initScrollReveal();
+  initCursorGlow();
+  initContactForm();
 
   // Animate cards after render
   setTimeout(initCardAnimations, 50);
