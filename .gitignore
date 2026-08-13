@@ -1,0 +1,17 @@
+# Ignore large binary/zip files that exceed GitHub's 100MB limit
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+.next/
