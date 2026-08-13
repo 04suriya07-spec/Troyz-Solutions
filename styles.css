@@ -138,23 +138,36 @@ body {
 .nav-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 700;
+}
+
+.logo-icon-svg {
+  width: 32px;
+  height: 32px;
+  color: #bef264;
+}
+
+.logo-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.logo-text {
+  font-family: var(--font-display, Inter, sans-serif);
+  font-weight: 800;
   font-size: 1.25rem;
+  letter-spacing: 1px;
+  color: #e2e8f0;
 }
 
-.logo-icon {
-  font-size: 1.5rem;
-  background: var(--gradient-main);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.logo-subtext {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  color: var(--text-muted);
 }
-
-.logo-text { color: #e2e8f0; }
-.logo-accent { color: var(--c-accent-2); }
 
 .nav-links {
   display: flex;
