@@ -1,6 +1,9 @@
 {
   "version": 2,
   "name": "troyz-solutions-rd-hub",
+  "framework": null,
+  "buildCommand": "echo 'Static site ready'",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "headers": [
     {

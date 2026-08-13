@@ -1,0 +1,9 @@
+{
+  "name": "troyz-solutions",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Troyz Solutions R&D Project Hub",
+  "scripts": {
+    "build": "echo 'Static site ready - no build step needed'"
+  }
+}
