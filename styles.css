@@ -242,11 +242,57 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 800; line-height
 /* ============================================================
    STATS BAR
    ============================================================ */
-.stats-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border-light); border: 1px solid var(--border-light); }
-.stat-card { display: flex; align-items: center; justify-content: center; background: var(--bg-base); padding: 40px; text-align: center; }
-.stat-info { display: flex; flex-direction: column; }
-.stat-value { font-size: 2.5rem; font-weight: 800; font-family: var(--font-display); line-height: 1; margin-bottom: 8px; color: var(--accent-primary); }
-.stat-desc { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+.stats-bar {
+  position: relative;
+  z-index: 1;
+  padding: 40px 32px;
+  border-bottom: 1px solid var(--border-light);
+}
+.stats-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 28px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-primary);
+}
+.stat-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(190,242,100,0.2));
+}
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: -1px;
+  color: var(--text-main);
+}
+.stat-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
 /* ============================================================
    CONTACT
