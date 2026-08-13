@@ -1,0 +1,198 @@
+.mc-container {
+  position: fixed;
+  inset: 0;
+  background-color: #02040a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.mc-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(0,229,255,0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.mc-hud {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.mc-hud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mc-hud-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.3);
+}
+
+.mc-hud-val {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+.mc-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.mc-orb-wrapper {
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 40px rgba(0, 229, 255, 0.2));
+}
+
+.mc-story-snippet {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.1em;
+  margin-bottom: 60px;
+  font-style: italic;
+  max-width: 300px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* Mission Card */
+.mc-mission-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 24px;
+  width: 340px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+}
+
+.mc-mission-card:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(0,229,255,0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0,229,255,0.1);
+}
+
+.mc-mission-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: #00e5ff;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.mc-mission-title {
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.mc-mission-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 24px;
+}
+
+.mc-mission-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.1em;
+}
+
+.mc-mission-diff {
+  color: #a855f7;
+}
+
+.mc-mission-reward {
+  color: rgba(255,255,255,0.3);
+}
+
+/* Cinematic States */
+.mc-memory-cinematic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mc-sparkle {
+  font-size: 32px;
+  margin-bottom: 16px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.mc-memory-title {
+  font-size: 24px;
+  font-weight: 300;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.mc-memory-quote {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  font-style: italic;
+}
+
+.mc-mechanics {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mc-xp-burst {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  color: #00e5ff;
+  font-weight: 900;
+  text-shadow: 0 0 20px rgba(0,229,255,0.5);
+  margin-bottom: 8px;
+  animation: scaleUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mc-level-up {
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: #a855f7;
+}
+
+.fade-in {
+  animation: mcFadeIn 1s ease forwards;
+}
+
+@keyframes mcFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

@@ -1,0 +1,53 @@
+PROJECT ASCENSIONVolume 2 – World Building & Universe DesignBlueprint (Foundation)
+Purpose: Define the fictional universe and the mapping between the game world and real life. This foundation establishes the terminology, structure, and design direction for all later gameplay systems.
+1. Executive Summary
+Describe the game universe, the role of the Player, the AI System, and how real-life actions become events inside the world.
+2. World Vision
+Goals, emotional tone, inspirations, design pillars, and the intended player experience.
+3. Universe Structure
+Layers of the world (Reality Layer, System Layer, Story Layer, Social Layer, Future Layer).
+4. Regions
+Health Kingdom, Knowledge Kingdom, Finance Kingdom, Career Kingdom, Adventure Kingdom, Relationship Kingdom, Creativity Kingdom.
+5. Factions & Guilds
+Design faction identities, guild rules, progression, reputation, and cooperative mechanics.
+6. Player Identity
+Classes, subclasses, titles, ranks, reputation, alignment, prestige, rebirth.
+7. NPC System
+AI Mentor, Merchant, Blacksmith, Librarian, Trainer, Healer, Guild Master, Rival, Companion.
+8. Story Engine
+Seasonal story arcs, daily narrative generation, milestones, cutscene concepts.
+9. World Events
+Weather events, festivals, travel events, financial events, learning events, health events.
+10. Decision Rationale
+Why a unified world is better than isolated productivity modules. Alternatives considered and trade-offs.
+11. Edge Cases
+New users, long inactivity, failed quests, impossible goals, disabled permissions, travel across time zones.
+12. Example Scenarios
+Student, entrepreneur, athlete, traveler, and creator progressing through the world.
+13. Implementation Notes
+Modules required, backend services, AI dependencies, localization, scalability considerations.
+14. Risks
+Feature overload, narrative inconsistency, accessibility concerns, content moderation, privacy.
+15. Future Expansion
+Additional kingdoms, multiplayer regions, AR locations, community-created worlds.
+Example World Flow (Text Diagram)
+Real Life Action      │      ▼ System Detection      │      ▼ AI Interpretation      │      ▼ World Event      │      ▼ Quest / Story Update      │      ▼ XP • Rewards • Reputation
+Deliverables for the Full Version
+Artifact
+Status in Full Volume
+World map
+Planned
+Faction diagrams
+Planned
+Story timeline
+Planned
+Decision rationale
+Included
+Edge case catalog
+Included
+Implementation notes
+Included
+NPC interaction flows
+Planned
+Glossary
+Included

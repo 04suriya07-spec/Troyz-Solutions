@@ -1,0 +1,766 @@
+/* ============================================================
+   ASCENSION OS — HUD DESIGN SYSTEM
+   Iron Man floating panel architecture
+   ============================================================ */
+
+/* ---- Root HUD Container ---- */
+.ascension-root {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #030812;
+}
+
+/* ---- Dynamic Background Themes ---- */
+.world-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: all 3s ease;
+  pointer-events: none;
+}
+
+.world-bg[data-theme="dawn"] {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 159, 67, 0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 60%, rgba(255, 211, 42, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #050308 0%, #12060e 40%, #1a0818 70%, #0f0510 100%);
+}
+
+.world-bg[data-theme="morning"] {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0, 132, 255, 0.2) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 229, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #020912 0%, #040e1e 40%, #060d1c 100%);
+}
+
+.world-bg[data-theme="afternoon"] {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(0, 229, 255, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(0, 120, 255, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #030a15 0%, #040d1a 100%);
+}
+
+.world-bg[data-theme="evening"] {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 107, 53, 0.2) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 50%, rgba(123, 47, 247, 0.12) 0%, transparent 40%),
+    linear-gradient(180deg, #070308 0%, #130610 40%, #1a0b10 70%, #0d050c 100%);
+}
+
+.world-bg[data-theme="night"] {
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(123, 47, 247, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 0% 50%, rgba(74, 0, 224, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 30%, rgba(0, 229, 255, 0.08) 0%, transparent 40%),
+    linear-gradient(180deg, #010208 0%, #04061a 35%, #070415 65%, #030212 100%);
+}
+
+.world-bg[data-theme="deepNight"] {
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(74, 0, 224, 0.2) 0%, transparent 60%),
+    linear-gradient(180deg, #010108 0%, #030210 50%, #020108 100%);
+}
+
+/* ---- City Skyline SVG Layer ---- */
+.city-skyline {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40vh;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ---- Main HUD Grid Layout ---- */
+.hud-layout {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 300px 1fr 300px;
+  grid-template-areas:
+    "top   top   top"
+    "left  center right"
+    "bottom bottom bottom";
+  min-height: 100vh;
+  gap: 0;
+  padding: 0;
+}
+
+@media (max-width: 1100px) {
+  .hud-layout {
+    grid-template-columns: 240px 1fr 240px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hud-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "top"
+      "center"
+      "left"
+      "right"
+      "bottom";
+  }
+}
+
+/* ---- HUD Panel Glass Base ---- */
+.hud-panel {
+  background: rgba(4, 10, 24, 0.75);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 229, 255, 0.03) 0%,
+    transparent 50%,
+    rgba(123, 47, 247, 0.02) 100%
+  );
+  pointer-events: none;
+}
+
+/* HUD corner decorations */
+.hud-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border-top: 2px solid rgba(0, 229, 255, 0.6);
+  border-left: 2px solid rgba(0, 229, 255, 0.6);
+  pointer-events: none;
+}
+
+.hud-panel .corner-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border-bottom: 2px solid rgba(0, 229, 255, 0.4);
+  border-right: 2px solid rgba(0, 229, 255, 0.4);
+  pointer-events: none;
+}
+
+/* ---- Zone-specific Panels ---- */
+.hud-top {
+  grid-area: top;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  background: rgba(2, 6, 18, 0.9);
+}
+
+.hud-left {
+  grid-area: left;
+  border-right: 1px solid rgba(0, 229, 255, 0.08);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.hud-center {
+  grid-area: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 24px;
+}
+
+.hud-right {
+  grid-area: right;
+  border-left: 1px solid rgba(0, 229, 255, 0.08);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.hud-bottom {
+  grid-area: bottom;
+  border-top: 1px solid rgba(0, 229, 255, 0.1);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(2, 6, 18, 0.9);
+}
+
+/* ---- HUD Section Headers ---- */
+.hud-section-header {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 255, 0.6);
+  padding: 0 0 8px 0;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-section-header .header-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.6);
+  animation: pulseGlowCyan 2s infinite;
+}
+
+/* ---- Ticker Bar ---- */
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: tickerScroll 30s linear infinite;
+  gap: 80px;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(0, 229, 255, 0.7);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ticker-separator {
+  color: rgba(123, 47, 247, 0.5);
+  font-size: 14px;
+  margin: 0 12px;
+}
+
+/* ---- Stat Rows ---- */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 229, 255, 0.06);
+  background: rgba(0, 229, 255, 0.02);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-row:hover {
+  border-color: rgba(0, 229, 255, 0.25);
+  background: rgba(0, 229, 255, 0.04);
+}
+
+.stat-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.stat-row:hover::before { opacity: 1; }
+
+.stat-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.stat-bar-container {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(90deg, var(--stat-color, #00e5ff), rgba(0, 229, 255, 0.5));
+  box-shadow: 0 0 6px var(--stat-color, rgba(0, 229, 255, 0.5));
+  position: relative;
+}
+
+.stat-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: barShimmer 2s infinite;
+}
+
+/* ---- AI Orb ---- */
+.ai-orb-wrapper {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-orb {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    rgba(0, 229, 255, 0.5) 0%,
+    rgba(123, 47, 247, 0.8) 40%,
+    rgba(74, 0, 224, 0.9) 100%
+  );
+  cursor: pointer;
+  position: relative;
+  animation: orbFloat 3s infinite ease-in-out, orbPulse 2s infinite ease-in-out;
+  transition: transform 0.2s ease;
+}
+
+.ai-orb:hover {
+  transform: scale(1.1);
+}
+
+.ai-orb:active {
+  transform: scale(0.95);
+}
+
+.orb-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  animation: orbRing 4s linear infinite;
+  border-top-color: rgba(0, 229, 255, 0.8);
+}
+
+.orb-ring-2 {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  border: 1px dashed rgba(123, 47, 247, 0.3);
+  animation: orbRingReverse 6s linear infinite;
+  border-bottom-color: rgba(123, 47, 247, 0.7);
+}
+
+.orb-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.orb-eyes {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.orb-eye {
+  width: 8px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 229, 255, 0.9);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+  animation: eyeGlow 2s infinite ease-in-out;
+}
+
+.orb-level-badge {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  font-weight: 900;
+  color: rgba(0, 229, 255, 0.9);
+  letter-spacing: 0.1em;
+}
+
+/* ---- Quest Console Bottom ---- */
+.quest-console {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.console-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+}
+
+.console-tab {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: rgba(0, 229, 255, 0.4);
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.console-tab:hover {
+  color: rgba(0, 229, 255, 0.7);
+  background: rgba(0, 229, 255, 0.03);
+}
+
+.console-tab.active {
+  color: rgba(0, 229, 255, 1);
+  border-bottom-color: rgba(0, 229, 255, 0.8);
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.console-tab.penalty-tab.active {
+  color: rgba(255, 42, 95, 1);
+  border-bottom-color: rgba(255, 42, 95, 0.8);
+  background: rgba(255, 42, 95, 0.05);
+}
+
+.quest-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 260px;
+}
+
+.quest-card {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 229, 255, 0.1);
+  background: rgba(0, 229, 255, 0.02);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.quest-card:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+  background: rgba(0, 229, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.quest-card.completed {
+  opacity: 0.5;
+  border-color: rgba(0, 229, 255, 0.05);
+}
+
+.quest-card.penalty {
+  border-color: rgba(255, 42, 95, 0.2);
+  background: rgba(255, 42, 95, 0.03);
+  animation: pulseGlowRed 2.5s infinite;
+}
+
+.quest-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.6), rgba(123, 47, 247, 0.6));
+  transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* ---- Character Display ---- */
+.character-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.character-aura {
+  position: absolute;
+  width: 200px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse,
+    rgba(123, 47, 247, 0.2) 0%,
+    rgba(0, 229, 255, 0.1) 50%,
+    transparent 70%
+  );
+  filter: blur(20px);
+  animation: characterAura 3s infinite ease-in-out;
+  pointer-events: none;
+}
+
+.character-figure {
+  animation: characterFloat 4s infinite ease-in-out, characterWalkIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0s, 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Info Panels in Center ---- */
+.player-header-card {
+  background: rgba(4, 10, 28, 0.8);
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ---- Rich Quest Notification Toast ---- */
+.quest-notification {
+  position: fixed;
+  right: 24px;
+  top: 80px;
+  width: 340px;
+  z-index: 500;
+  background: rgba(4, 10, 28, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(24px);
+  overflow: hidden;
+  animation: notifSlideIn 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-shadow:
+    0 0 30px rgba(0, 229, 255, 0.15),
+    0 20px 60px rgba(0,0,0,0.5);
+}
+
+.notif-progress-bar {
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.8), rgba(123, 47, 247, 0.8));
+  animation: notifProgress 4.5s linear forwards;
+}
+
+/* ---- Level Up Overlay ---- */
+.level-up-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.level-up-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0, 229, 255, 0.3), rgba(123, 47, 247, 0.2), transparent);
+  animation: levelUpFlash 1.2s ease-out forwards;
+}
+
+.level-up-lightning {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.03);
+  animation: lightning 1.5s ease-out forwards;
+}
+
+.level-up-shockwave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 229, 255, 0.8);
+  animation: levelUpShockwave 1s ease-out forwards;
+}
+
+.level-up-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  animation: levelUpExplosion 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  pointer-events: all;
+  background: rgba(4, 10, 28, 0.95);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  border-radius: 16px;
+  padding: 40px 60px;
+  backdrop-filter: blur(30px);
+  box-shadow:
+    0 0 60px rgba(0, 229, 255, 0.3),
+    0 0 120px rgba(123, 47, 247, 0.2),
+    inset 0 0 40px rgba(0, 229, 255, 0.05);
+  min-width: 320px;
+}
+
+/* ---- Boot Screen ---- */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #010208;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: bootFadeOut 0.8s ease-in-out both;
+}
+
+.boot-line {
+  font-family: 'Orbitron', monospace;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  animation: bootTextReveal 0.3s ease both;
+  text-align: center;
+}
+
+.boot-cursor::after {
+  content: '█';
+  animation: bootCursor 0.8s step-end infinite;
+  color: rgba(0, 229, 255, 0.8);
+}
+
+/* ---- World Events Panel ---- */
+.world-event-card {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.world-event-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--event-color, rgba(0, 229, 255, 0.6));
+}
+
+.world-event-card:hover {
+  border-color: var(--event-color, rgba(0, 229, 255, 0.3));
+  background: rgba(255,255,255,0.04);
+}
+
+/* ---- XP & Gold bars ---- */
+.resource-bar {
+  position: relative;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.resource-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.resource-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background-size: 200%;
+  animation: barShimmer 2.5s infinite;
+}
+
+/* ---- Scrollbar for side panels ---- */
+.hud-left::-webkit-scrollbar,
+.hud-right::-webkit-scrollbar,
+.quest-items-grid::-webkit-scrollbar {
+  width: 3px;
+}
+
+.hud-left::-webkit-scrollbar-thumb,
+.hud-right::-webkit-scrollbar-thumb,
+.quest-items-grid::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.2);
+  border-radius: 2px;
+}
+
+/* ---- Holographic menu glow lines ---- */
+.holo-border-x {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.4), transparent);
+}
+
+.holo-border-y {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+}
+
+/* ---- Screen scan effect ---- */
+.hud-scan-line {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.15), transparent);
+  z-index: 9998;
+  pointer-events: none;
+  animation: scanLine 8s linear infinite;
+}

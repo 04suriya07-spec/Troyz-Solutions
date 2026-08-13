@@ -1,0 +1,28 @@
+PROJECT ASCENSIONExpansion Proposal – The Living World Engine & Memory System
+ConceptProject ASCENSION is not a productivity app. It is a persistent Life RPG where the real world is the game world. Every meaningful real-life experience can become part of progression, storytelling, exploration, and personal memories.
+1. Living World Engine
+Transform the real world into dynamic realms (Health, Career, Finance, Exploration, Relationships, Business, Creativity, etc.). Weather, seasons, festivals, time of day, location (with permission), calendar events and personal goals influence quests and world events.
+2. Exploration Realm
+Countries, states, cities, villages, landmarks, museums, mountains, temples, restaurants, hiking trails and hidden locations become discoverable content with titles, collectibles and story arcs.
+3. Memory Engine
+Every completed journey can become a timeline entry containing photos, optional voice notes, journal entries, scanned tickets, maps visited, achievements unlocked and highlights. The player owns these memories and decides what to store or delete.
+4. Memory Capsule
+Generate a replay for important milestones using media the player chooses to keep: selected photos, short videos, optional audio notes, achievements, routes and journal entries.
+5. AI Story Narrator
+Convert milestones into a narrative: 'Chapter 12 – Your first solo pilgrimage', 'The Startup Launch', 'The 100th Workout', etc.
+6. Collections
+Passport stamps, foods tasted, languages heard, books read, flights, train journeys, mountains climbed, national parks visited, badges, titles and legendary discoveries.
+7. Cross-Realm Gameplay
+Travel unlocks culture quests, language quests, photography challenges, business opportunities, friendships, history lessons and exploration achievements.
+8. Technical Reality
+The app can import or organize media the user creates or explicitly shares. On modern mobile operating systems it cannot continuously record video or audio in the background or monitor everything without the user's knowledge or permission. Recording should always be user-controlled and privacy-first.
+9. Future Expansion
+Support optional integrations with cameras, wearables, cloud storage, drones or future devices where supported by the platform and with explicit user consent.
+Design Principles
+Every experience should become a story.
+Every achievement should become a memory.
+Every journey should unlock new gameplay.
+Player privacy and consent always come first.
+Users choose what is recorded, stored, shared or deleted.
+Important Engineering Note
+Continuous recording of everything (video, audio or screen) is neither desirable nor generally supported by mobile operating systems because of privacy, battery and platform restrictions. A better design is an opt-in Memory Capture system that lets users intentionally capture moments and automatically organizes them into a Life Timeline.

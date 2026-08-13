@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troyz Solutions — R&D Project Hub</title>
+  <meta name="description" content="Troyz Solutions R&D Project Hub — Browse, analyze, and claim projects for development. Explore our innovation pipeline with real-time trend analysis." />
+  <meta name="keywords" content="Troyz Solutions, R&D, projects, innovation, AI, FinTech, algorithmic trading, community app" />
+  <meta property="og:title" content="Troyz Solutions — R&D Project Hub" />
+  <meta property="og:description" content="Internal R&D platform to showcase, assign, and analyze projects at Troyz Solutions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="grid-overlay"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Troyz Solutions home">
+        <span class="logo-icon" aria-hidden="true">&#x2B21;</span>
+        <span class="logo-text">Troyz <span class="logo-accent">Solutions</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#stats" class="nav-link">Stats</a>
+        <a href="#about" class="nav-link">About</a>
+        <button id="filterToggleBtn" class="btn-outline" aria-expanded="false" aria-controls="filterPanel">
+          <span class="btn-icon">&#9881;</span> Filter
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header id="hero" class="hero" role="banner">
+    <div class="hero-content">
+      <div class="hero-badge" aria-label="Internal R&D Platform">
+        <span class="badge-dot" aria-hidden="true"></span>
+        Internal R&amp;D Platform
+      </div>
+      <h1 class="hero-title">
+        Innovation <span class="gradient-text">Pipeline</span>
+      </h1>
+      <p class="hero-sub">
+        Pick a project. Analyze its market potential. Build something extraordinary.
+        Every idea here is a door waiting to be opened.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary" id="exploreBtn">
+          <span>Explore Projects</span>
+          <span class="btn-arrow" aria-hidden="true">&#8594;</span>
+        </a>
+        <button id="claimModalBtn" class="btn-ghost">
+          <span class="btn-icon" aria-hidden="true">&#127919;</span> Submit Work
+        </button>
+      </div>
+      <div class="hero-stats" role="list" aria-label="Platform statistics">
+        <div class="hero-stat" role="listitem">
+          <span class="stat-num" data-count="10">0</span>
+          <span class="stat-lbl">Projects</span>
+        </div>
+        <div class="hero-divider" aria-hidden="true"></div>
+        <div class="hero-stat" role="listitem">
+          <span class="stat-num" data-count="4">0</span>
+          <span class="stat-lbl">Domains</span>
+        </div>
+        <div class="hero-divider" aria-hidden="true"></div>
+        <div class="hero-stat" role="listitem">
+          <span class="stat-num" data-count="87">0</span>
+          <span class="stat-lbl">Avg Trend Score</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="orbit-ring ring-1">
+        <div class="orbit-dot dot-a"></div>
+      </div>
+      <div class="orbit-ring ring-2">
+        <div class="orbit-dot dot-b"></div>
+      </div>
+      <div class="orbit-ring ring-3">
+        <div class="orbit-dot dot-c"></div>
+      </div>
+      <div class="orbit-center">
+        <span>T</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTER PANEL -->
+  <section id="filterPanel" class="filter-panel" role="search" aria-label="Project filters" hidden>
+    <div class="filter-inner">
+      <div class="filter-group">
+        <label for="searchInput" class="filter-label">Search</label>
+        <input id="searchInput" type="search" class="filter-input" placeholder="Search projects..." autocomplete="off" />
+      </div>
+      <div class="filter-group">
+        <span class="filter-label" id="domainFilterLabel">Domain</span>
+        <div class="filter-chips" role="group" aria-labelledby="domainFilterLabel">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="ai">AI / ML</button>
+          <button class="chip" data-filter="fintech">FinTech</button>
+          <button class="chip" data-filter="platform">Platform</button>
+          <button class="chip" data-filter="community">Community</button>
+          <button class="chip" data-filter="other">Other</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label" id="langFilterLabel">Language</span>
+        <div class="filter-chips" role="group" aria-labelledby="langFilterLabel">
+          <button class="chip active" data-lang="all">All</button>
+          <button class="chip" data-lang="python">Python</button>
+          <button class="chip" data-lang="typescript">TypeScript</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label" id="statusFilterLabel">Status</span>
+        <div class="filter-chips" role="group" aria-labelledby="statusFilterLabel">
+          <button class="chip active" data-status="all">All</button>
+          <button class="chip" data-status="open">Open</button>
+          <button class="chip" data-status="claimed">Claimed</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section id="stats" class="stats-bar" aria-label="Project statistics">
+    <div class="stats-inner">
+      <div class="stat-card" role="article">
+        <div class="stat-icon" aria-hidden="true">&#129302;</div>
+        <div class="stat-info">
+          <span class="stat-value">4</span>
+          <span class="stat-desc">AI / ML Projects</span>
+        </div>
+      </div>
+      <div class="stat-card" role="article">
+        <div class="stat-icon" aria-hidden="true">&#128200;</div>
+        <div class="stat-info">
+          <span class="stat-value">3</span>
+          <span class="stat-desc">FinTech Projects</span>
+        </div>
+      </div>
+      <div class="stat-card" role="article">
+        <div class="stat-icon" aria-hidden="true">&#127760;</div>
+        <div class="stat-info">
+          <span class="stat-value">5</span>
+          <span class="stat-desc">Live Deployments</span>
+        </div>
+      </div>
+      <div class="stat-card" role="article">
+        <div class="stat-icon" aria-hidden="true">&#9889;</div>
+        <div class="stat-info">
+          <span class="stat-value">2026</span>
+          <span class="stat-desc">Active Since</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS GRID -->
+  <main id="projects" class="projects-section" role="main">
+    <div class="section-header">
+      <h2 class="section-title">R&amp;D <span class="gradient-text">Projects</span></h2>
+      <p class="section-sub" id="projectCount">Showing 9 projects</p>
+    </div>
+    <div class="projects-grid" id="projectsGrid" role="list" aria-label="Projects">
+      <!-- Injected by JS -->
+    </div>
+  </main>
+
+  <!-- ABOUT -->
+  <section id="about" class="about-section" aria-label="About Troyz Solutions">
+    <div class="about-inner">
+      <div class="about-text">
+        <span class="about-badge">The Company</span>
+        <h2 class="about-title">Building the <span class="gradient-text">Future</span></h2>
+        <p class="about-desc">
+          Troyz Solutions is an innovation-first R&D company pushing boundaries across
+          AI, FinTech, and community platforms. Every project in this hub represents a
+          real opportunity — a chance to shape what's next.
+        </p>
+        <p class="about-desc">
+          Our R&D team picks projects, writes improvement proposals, and delivers
+          market viability reports — helping leadership decide what to greenlight next.
+        </p>
+      </div>
+      <div class="about-cards">
+        <div class="about-card" role="article">
+          <div class="about-card-icon" aria-hidden="true">&#127919;</div>
+          <h3>Pick a Project</h3>
+          <p>Choose any project from the hub and claim it as your active R&D task.</p>
+        </div>
+        <div class="about-card" role="article">
+          <div class="about-card-icon" aria-hidden="true">&#9999;&#65039;</div>
+          <h3>Write a Brief</h3>
+          <p>Analyze the project, propose improvements, and note the market opportunity.</p>
+        </div>
+        <div class="about-card" role="article">
+          <div class="about-card-icon" aria-hidden="true">&#128202;</div>
+          <h3>Score the Odds</h3>
+          <p>Rate how aligned the project is with current market trends and submit your analysis.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="logo-icon" aria-hidden="true">&#x2B21;</span>
+        <span class="logo-text">Troyz <span class="logo-accent">Solutions</span></span>
+      </div>
+      <p class="footer-copy">&#169; 2026 Troyz Solutions. Internal R&amp;D Platform. All rights reserved.</p>
+      <p class="footer-note">Data sourced live from GitHub. Last refreshed on page load.</p>
+    </div>
+  </footer>
+
+  <!-- PROJECT DETAIL MODAL -->
+  <div id="projectModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-box modal-box-lg">
+      <button id="modalClose" class="modal-close" aria-label="Close project details">&#10005;</button>
+      <div id="modalContent" class="modal-content">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT WORK MODAL -->
+  <div id="submitModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="submitModalTitle" hidden>
+    <div class="modal-box">
+      <button id="submitModalClose" class="modal-close" aria-label="Close submit form">&#10005;</button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="submitModalTitle" class="modal-title">Submit R&amp;D Brief</h2>
+          <p class="modal-sub">Document your analysis and improvement proposal</p>
+        </div>
+        <form id="submitForm" class="submit-form" novalidate>
+          <div class="form-group">
+            <label for="memberName" class="form-label">Your Name <span aria-hidden="true">*</span></label>
+            <input id="memberName" type="text" class="form-input" placeholder="Full name" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="projectSelect" class="form-label">Project <span aria-hidden="true">*</span></label>
+            <select id="projectSelect" class="form-input" required>
+              <option value="">Select a project</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="briefText" class="form-label">Improvement Brief <span aria-hidden="true">*</span></label>
+            <textarea id="briefText" class="form-input form-textarea" placeholder="Describe your proposed improvements, what you plan to build, and how it addresses current gaps..." required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="trendScore" class="form-label">
+              Market Trend Score: <strong id="trendScoreDisplay">50</strong>/100
+            </label>
+            <input id="trendScore" type="range" min="0" max="100" value="50" class="form-range" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" />
+            <div class="range-labels" aria-hidden="true">
+              <span>Niche</span><span>Trending</span><span>Hot</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="trendReason" class="form-label">Why this trend score?</label>
+            <textarea id="trendReason" class="form-input form-textarea form-textarea-sm" placeholder="Briefly explain why you rated this trend score - market signals, competitor activity, etc."></textarea>
+          </div>
+          <button type="submit" class="btn-primary btn-full" id="submitFormBtn">
+            <span>Submit Brief</span>
+            <span class="btn-arrow" aria-hidden="true">&#8594;</span>
+          </button>
+        </form>
+        <div id="submitSuccess" class="submit-success" hidden>
+          <div class="success-icon" aria-hidden="true">&#9989;</div>
+          <h3>Brief Submitted!</h3>
+          <p>Your R&D analysis has been saved. The team lead will review it shortly.</p>
+          <button class="btn-ghost" id="submitAgainBtn">Submit Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="alert" aria-live="polite" aria-atomic="true" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

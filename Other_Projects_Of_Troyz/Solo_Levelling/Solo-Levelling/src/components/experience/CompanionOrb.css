@@ -1,0 +1,109 @@
+.companion-orb-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.companion-orb {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.orb-core {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+.orb-aura {
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    opacity: 0.5;
+    animation: orb-breathe 4s infinite alternate ease-in-out;
+}
+
+/* States */
+.orb-idle {
+    /* Uses default breath */
+}
+
+.orb-thinking {
+    animation: orb-spin 2s linear infinite;
+}
+
+.orb-thinking .orb-aura {
+    background: radial-gradient(circle, #00ffff 0%, transparent 70%);
+}
+
+.orb-pulse {
+    animation: orb-quick-pulse 0.5s ease-out;
+}
+
+.orb-redaura {
+    background: #ff0044;
+    box-shadow: 0 0 20px #ff0044;
+}
+
+.orb-redaura .orb-aura {
+    background: radial-gradient(circle, #ff0044 0%, transparent 70%);
+    animation: orb-fast-breathe 1s infinite alternate ease-in-out;
+}
+
+.orb-goldenexplosion {
+    background: #ffd700;
+    box-shadow: 0 0 40px #ffd700;
+    transform: scale(1.5);
+}
+
+.orb-goldenexplosion .orb-aura {
+    background: radial-gradient(circle, #ffd700 0%, transparent 80%);
+    animation: orb-explode 2s forwards;
+}
+
+/* Animations */
+@keyframes orb-breathe {
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1.2); opacity: 0.8; }
+}
+
+@keyframes orb-fast-breathe {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.4); opacity: 1; }
+}
+
+@keyframes orb-spin {
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes orb-quick-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); filter: brightness(1.5); }
+    100% { transform: scale(1); }
+}
+
+@keyframes orb-explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}

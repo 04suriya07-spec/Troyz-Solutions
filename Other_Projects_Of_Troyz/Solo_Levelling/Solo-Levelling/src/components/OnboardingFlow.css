@@ -1,0 +1,203 @@
+.onboarding-container {
+  position: fixed;
+  inset: 0;
+  background-color: #000;
+  color: #fff;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.onboarding-stars {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 50px 160px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 160px 120px, #fff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: starDrift 100s linear infinite;
+  opacity: 0.5;
+  transition: opacity 3s ease;
+}
+
+.dim-stars {
+  opacity: 0.1;
+}
+
+@keyframes starDrift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-200px); }
+}
+
+.onboarding-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Let clicks pass through when fading out */
+}
+
+.fade-in {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 1.5s ease;
+}
+
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+}
+
+.fade-in-delayed {
+  opacity: 0;
+  animation: delayFadeIn 2s 1.5s forwards;
+}
+
+@keyframes delayFadeIn {
+  to { opacity: 1; }
+}
+
+/* Logo */
+.onboarding-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 0.4em;
+  background: linear-gradient(135deg, #00e5ff, #7b2ff7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.3));
+}
+
+/* Welcome Text & Orb */
+.onboarding-orb-container {
+  margin-bottom: 40px;
+  filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.4));
+}
+
+.onboarding-text-container {
+  position: relative;
+  height: 60px;
+  width: 100%;
+  text-align: center;
+}
+
+.onboarding-text {
+  position: absolute;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Surveys */
+.active-survey {
+  pointer-events: auto;
+}
+
+.onboarding-question {
+  font-size: 24px;
+  font-weight: 300;
+  margin-bottom: 40px;
+  text-align: center;
+  color: rgba(255,255,255,0.9);
+  line-height: 1.4;
+}
+
+.onboarding-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 320px;
+}
+
+.onboarding-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.onboarding-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+  transform: translateX(4px);
+}
+
+.onboarding-btn.selected {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.5);
+  color: #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+/* Birth Cinematic */
+.birth-container {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.birth-step {
+  transition: opacity 0.5s ease;
+}
+
+.birth-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.birth-bar {
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.birth-fill {
+  height: 100%;
+  background: #00e5ff;
+  box-shadow: 0 0 10px #00e5ff;
+  transition: width 0.2s linear;
+}
+
+.birth-identity {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.1em;
+}
+
+.birth-final {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 1.5;
+}

@@ -1,0 +1,57 @@
+PROJECT ASCENSIONVolume 4 – Progression System & Game EconomyBlueprint (Foundation)
+Purpose: Define how players grow over time through experience, levels, rewards, currencies, unlocks, milestones, and balancing. This volume specifies the core progression loop that connects every other system.
+1. Executive Summary
+Overview of the progression philosophy and how actions convert into meaningful advancement.
+2. Design Goals
+Reward consistency, avoid manipulation, support long-term engagement, adapt to individual players.
+3. Experience (XP) System
+Sources of XP, hidden XP, combo bonuses, streak modifiers, diminishing returns, anti-exploit rules.
+4. Leveling System
+Player levels, account levels, class levels, milestone rewards, progression pacing.
+5. Skill Points & Unlocks
+Unlock skills, passive abilities, active abilities, specialization paths.
+6. Currency System
+Gold, Gems, Tokens, Reputation Points, Event Currency, Premium Cosmetics (optional).
+7. Rewards
+Daily rewards, quest rewards, achievement rewards, seasonal rewards, mystery rewards.
+8. Prestige & Rebirth
+Optional long-term reset mechanics with permanent benefits and exclusive content.
+9. Milestones
+Personal goals, life achievements, boss victories, legendary accomplishments.
+10. Balancing Philosophy
+Risk vs reward, fairness, avoiding pay-to-win, adaptive difficulty.
+11. Decision Rationale
+Why XP, levels and milestones are used; alternatives considered; trade-offs.
+12. Edge Cases
+Offline progress, cheating attempts, duplicate rewards, changing goals, migration between devices.
+13. Example Progression
+Example journey from Level 1 to Level 50 across study, fitness, finance and career.
+14. Implementation Notes
+Database entities, reward services, progression engine, event processing.
+15. Risks & Future Enhancements
+Inflation, reward fatigue, balancing complexity, future seasonal systems.
+Core Progression Loop
+Complete Action        │        ▼Validate Activity        │        ▼Award XP & Currency        │        ▼Update Stats        │        ▼Check Unlocks        │        ▼Generate New Opportunities        │        ▼Continue Progression
+Planned Deliverables for Complete Volume
+Artifact
+Complete Version
+XP formulas
+Yes
+Level curve charts
+Yes
+Economy balancing model
+Yes
+Reward probability tables
+Yes
+Season progression design
+Yes
+Prestige rules
+Yes
+Sequence diagrams
+Yes
+Edge-case catalogue
+Yes
+Implementation guide
+Yes
+Testing checklist
+Yes

@@ -1,0 +1,52 @@
+:root {
+  --primary-color: #00e6ff;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+  --accent-gold: #fbbf24;
+  --accent-danger: #ef4444;
+}
+
+/* Dynamic Themes driven by ExperienceState */
+.theme-morning {
+  --primary-color: #ff9800;
+  --bg-dark: #fafafa;
+  --bg-card: #ffffff;
+  --text-main: #333333;
+  --text-dim: #666666;
+}
+
+.theme-neon {
+  --primary-color: #ff00ff;
+  --bg-dark: #000000;
+  --bg-card: #111111;
+  --text-main: #ffffff;
+}
+
+.theme-crimson {
+  --primary-color: #ff0044;
+  --bg-dark: #1a0005;
+  --bg-card: #33000b;
+}
+
+.theme-gold {
+  --primary-color: #ffd700;
+  --bg-dark: #1a1a00;
+  --bg-card: #333300;
+}
+
+.theme-glass {
+  --primary-color: #00e6ff;
+  --bg-dark: #0a1128;
+  --bg-card: rgba(30, 41, 59, 0.5); /* translucent */
+}
+
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  transition: background-color 1s ease, color 1s ease;
+}

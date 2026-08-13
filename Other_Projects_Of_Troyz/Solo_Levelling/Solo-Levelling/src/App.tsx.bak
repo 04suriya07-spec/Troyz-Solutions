@@ -1,0 +1,495 @@
+import React, { useState, useEffect, useCallback } from 'react';
+
+import BootSequence from './components/BootSequence';
+import TopBanner from './components/TopBanner';
+import Sidebar from './components/Sidebar';
+import HeroSection from './components/HeroSection';
+import QuestSection from './components/QuestSection';
+import RightPanel from './components/RightPanel';
+import BottomNav from './components/BottomNav';
+import LevelUpSequence from './components/LevelUpSequence';
+import QuestNotification from './components/QuestNotification';
+import NewQuestModal from './components/NewQuestModal';
+import PlaceholderView from './components/PlaceholderView';
+import StatsPanel from './components/StatsPanel';
+import SkillGraph from './components/SkillGraph';
+import { Sword, Swords, MapPin } from 'lucide-react';
+import { RuleEngine, GlobalState } from './engines/rules/RuleEngine';
+import { GLOBAL_RULES } from './config/rules';
+import { calculatePassiveMultipliers } from './engines/skills/SkillEngine';
+import { SKILL_NODES } from './config/skills';
+import { EventBus } from './engines/event/EventEngine';
+import { useEventBus } from './hooks/useEventBus';
+import WorldEventConsole from './components/WorldEventConsole';
+
+// ─── Types ───────────────────────────────────────────────────────────────
+interface Quest {
+  id: string; title: string; description: string;
+  type: 'daily' | 'side' | 'main' | 'penalty';
+  stat: 'STR' | 'AGI' | 'INT' | 'VIT' | 'CHA' | 'WIS' | 'LUK' | 'END' | 'DEX' | 'CRE' | 'DIS';
+  xpReward: number; goldReward: number;
+  completed: boolean; createdAt: string;
+}
+
+interface ShopItem {
+  id: string; title: string; description: string; cost: number;
+}
+
+interface SystemLog {
+  id: string; timestamp: string; message: string;
+  type: 'info' | 'success' | 'warning' | 'levelUp';
+}
+
+// ─── Defaults ────────────────────────────────────────────────────────────
+const DEFAULT_QUESTS: Quest[] = [
+  { id: 'q-1', title: 'Daily Training: Physical Body', description: 'Complete 30 push-ups, 30 sit-ups, 30 squats, and a 2km run/walk.', type: 'daily', stat: 'STR', xpReward: 20, goldReward: 10, completed: false, createdAt: new Date().toISOString() },
+  { id: 'q-2', title: 'Daily Training: Intellect', description: 'Read a book or study a topic for 25 minutes.', type: 'daily', stat: 'INT', xpReward: 20, goldReward: 10, completed: false, createdAt: new Date().toISOString() },
+  { id: 'q-3', title: 'Vitality Recovery Protocol', description: 'Drink 3L water and eat clean meals.', type: 'daily', stat: 'VIT', xpReward: 15, goldReward: 5, completed: false, createdAt: new Date().toISOString() },
+  { id: 'q-4', title: 'Mind Calibration', description: 'Meditate or journal for 10 minutes.', type: 'daily', stat: 'WIS', xpReward: 15, goldReward: 5, completed: false, createdAt: new Date().toISOString() },
+  { id: 'q-5', title: 'Awaken the Founder', description: 'Complete a main milestone for your entrepreneurship or career.', type: 'main', stat: 'GLD', xpReward: 100, goldReward: 50, completed: false, createdAt: new Date().toISOString() },
+];
+
+const DEFAULT_SHOP: ShopItem[] = [
+  { id: 's-1', title: '1-Hour Game Session', description: 'Unlock 1 hour of gaming.', cost: 30 },
+  { id: 's-2', title: 'Cheat Meal Protocol', description: 'Redeem for a cheat meal.', cost: 60 },
+  { id: 's-3', title: '1-Hour Entertainment Scroll', description: '1 hour of streaming or social media.', cost: 25 },
+  { id: 's-4', title: 'Rest & Recovery Day', description: 'Pardon all daily quests for a day.', cost: 100 },
+];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────
+const getRank = (lvl: number) => {
+  if (lvl >= 25) return 'S';
+  if (lvl >= 20) return 'A';
+  if (lvl >= 15) return 'B';
+  if (lvl >= 10) return 'C';
+  if (lvl >= 5) return 'D';
+  return 'E';
+};
+
+// ─── App ──────────────────────────────────────────────────────────────────
+export default function App() {
+  // ── State ──
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
+  const [gold, setGold] = useState(50);
+  const [statPoints, setStatPoints] = useState(5);
+  const [stats, setStats] = useState({ 
+    STR: 10, AGI: 10, INT: 10, VIT: 10, CHA: 10, WIS: 10, 
+    LUK: 10, END: 10, DEX: 10, CRE: 10, DIS: 10 
+  });
+  const [statXp, setStatXp] = useState({
+    STR: 0, AGI: 0, INT: 0, VIT: 0, CHA: 0, WIS: 0, 
+    LUK: 0, END: 0, DEX: 0, CRE: 0, DIS: 0 
+  });
+  const [questHistoryStats, setQuestHistoryStats] = useState<Record<string, number>>({});
+  const [unlockedSkills, setUnlockedSkills] = useState<string[]>([]);
+  
+  const [quests, setQuests] = useState<Quest[]>([]);
+  const [shopItems, setShopItems] = useState<ShopItem[]>([]);
+  const [logs, setLogs] = useState<SystemLog[]>([]);
+
+  // ── UI State ──
+  const [showBoot, setShowBoot] = useState(true);
+  const [showLevelUp, setShowLevelUp] = useState(false);
+  const [levelUpData, setLevelUpData] = useState(1);
+  const [notification, setNotification] = useState<Quest | null>(null);
+  const [showNewQuest, setShowNewQuest] = useState(false);
+  const [activeNav, setActiveNav] = useState('dashboard');
+
+  // ── Form ──
+  const [nqTitle, setNqTitle] = useState('');
+  const [nqDesc, setNqDesc] = useState('');
+  const [nqType, setNqType] = useState<'daily' | 'side' | 'main'>('side');
+  const [nqStat, setNqStat] = useState<'STR' | 'AGI' | 'INT' | 'VIT' | 'CHA' | 'WIS' | 'LUK' | 'END' | 'DEX' | 'CRE' | 'DIS'>('STR');
+  const [nqXp, setNqXp] = useState(15);
+  const [nqGold, setNqGold] = useState(5);
+
+  // ─ Initialize ─
+  useEffect(() => {
+    const sl = localStorage.getItem;
+    const ld = (key: string, fallback: any) => {
+      try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch { return fallback; }
+    };
+    const ldi = (key: string, fallback: number) => {
+      const v = localStorage.getItem(key); return v ? parseInt(v) : fallback;
+    };
+
+    setLevel(ldi('asc_level', 1));
+    setXp(ldi('asc_xp', 0));
+    setGold(ldi('asc_gold', 50));
+    setStatPoints(ldi('asc_statpts', 5));
+    setStats(ld('asc_stats', { 
+      STR: 10, AGI: 10, INT: 10, VIT: 10, CHA: 10, WIS: 10, 
+      LUK: 10, END: 10, DEX: 10, CRE: 10, DIS: 10 
+    }));
+    setStatXp(ld('asc_stat_xp', { 
+      STR: 0, AGI: 0, INT: 0, VIT: 0, CHA: 0, WIS: 0, 
+      LUK: 0, END: 0, DEX: 0, CRE: 0, DIS: 0 
+    }));
+    setQuestHistoryStats(ld('asc_quest_history', {}));
+    setUnlockedSkills(ld('asc_skills', []));
+    
+    // Load executed rules state
+    const executedRules = ld('asc_executed_rules', []);
+    RuleEngine.loadExecutedRules(executedRules);
+    
+    setQuests(ld('asc_quests', DEFAULT_QUESTS));
+    setShopItems(ld('asc_shop', DEFAULT_SHOP));
+    setLogs(ld('asc_logs', []));
+  }, []);
+
+  // ─ Auto-save ─
+  useEffect(() => {
+    localStorage.setItem('asc_level', level.toString());
+    localStorage.setItem('asc_xp', xp.toString());
+    localStorage.setItem('asc_gold', gold.toString());
+    localStorage.setItem('asc_statpts', statPoints.toString());
+    localStorage.setItem('asc_stats', JSON.stringify(stats));
+    localStorage.setItem('asc_stat_xp', JSON.stringify(statXp));
+    localStorage.setItem('asc_quest_history', JSON.stringify(questHistoryStats));
+    localStorage.setItem('asc_skills', JSON.stringify(unlockedSkills));
+    localStorage.setItem('asc_executed_rules', JSON.stringify(RuleEngine.getExecutedRules()));
+    localStorage.setItem('asc_quests', JSON.stringify(quests));
+    localStorage.setItem('asc_shop', JSON.stringify(shopItems));
+    localStorage.setItem('asc_logs', JSON.stringify(logs.slice(0, 50)));
+  }, [level, xp, gold, statPoints, stats, statXp, questHistoryStats, unlockedSkills, quests, shopItems, logs]);
+
+  const addLog = useCallback((message: string, type: SystemLog['type'] = 'info') => {
+    const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    setLogs(prev => [{ id: Math.random().toString(36).substring(2, 9), timestamp: ts, message, type }, ...prev.slice(0, 49)]);
+  }, []);
+
+  // ─ Rule Engine Evaluator ─
+  useEffect(() => {
+    const globalState: GlobalState = {
+      stats,
+      questHistoryStats,
+      unlockedSkills
+    };
+    RuleEngine.evaluateRules(GLOBAL_RULES, globalState);
+  }, [stats, questHistoryStats, unlockedSkills]);
+
+  // ─ Custom Action Handler (Triggered by RuleEngine) ─
+  useEventBus('CUSTOM', (e) => {
+    const action = e.payload.action;
+    if (action === 'unlock_skill') {
+      const skillId = e.payload.skillId;
+      setUnlockedSkills(prev => {
+        if (!prev.includes(skillId)) return [...prev, skillId];
+        return prev;
+      });
+    } else if (action === 'add_log') {
+      addLog(e.payload.message, e.payload.logType);
+    }
+  });
+
+  const xpNeeded = level * 100;
+  const rank = getRank(level);
+  const totalPower = Object.values(stats).reduce((a, b) => a + b, 0);
+  const incompleteQuests = quests.filter(q => !q.completed).length;
+  const completedToday = quests.filter(q => q.type === 'daily' && q.completed).length;
+  const totalToday = quests.filter(q => q.type === 'daily').length;
+  const latestLog = logs[0]?.message;
+
+  // ─ XP/Level handler ─
+  const gainXp = useCallback((amount: number) => {
+    setXp(curXp => {
+      let newXp = curXp + amount;
+      setLevel(curLvl => {
+        let newLvl = curLvl;
+        let leveled = false;
+        while (newXp >= newLvl * 100) {
+          newXp -= newLvl * 100;
+          newLvl++;
+          leveled = true;
+        }
+        if (leveled) {
+          setStatPoints(p => p + 5);
+          setLevelUpData(newLvl);
+          setShowLevelUp(true);
+          addLog(`LEVEL UP! Reached Level ${newLvl}. +5 Attribute Points.`, 'levelUp');
+          document.body.style.animation = 'screenShake 0.5s ease both';
+          setTimeout(() => { document.body.style.animation = ''; }, 600);
+        }
+        setTimeout(() => setXp(newXp), 0);
+        return newLvl;
+      });
+      return curXp;
+    });
+  }, [addLog]);
+
+  // ─ Event Engine Subscriptions ─
+  useEventBus('QUEST_COMPLETED', (e) => {
+    const q = e.payload.quest as Quest;
+    
+    // Reward Engine Logic
+    setGold(g => g + q.goldReward);
+    
+    // Passive skill multipliers
+    const passives = calculatePassiveMultipliers(unlockedSkills);
+    let xpMultiplier = 1.0;
+    if (q.stat === 'STR' && passives['xp_multiplier_workout']) xpMultiplier *= passives['xp_multiplier_workout'];
+    if (q.stat === 'INT' && passives['xp_multiplier_reading']) xpMultiplier *= passives['xp_multiplier_reading'];
+    
+    const finalXp = Math.floor(q.xpReward * xpMultiplier);
+    gainXp(finalXp);
+    
+    // Award stat XP
+    const statXpGain = Math.max(1, Math.floor(finalXp / 3));
+    setStatXp(sx => {
+      const newXp = (sx[q.stat as keyof typeof sx] || 0) + statXpGain;
+      if (newXp >= 100) {
+        setStats(s => ({ ...s, [q.stat]: s[q.stat as keyof typeof s] + 1 }));
+        addLog(`Attribute Leveled Up: ${q.stat} +1`, 'levelUp');
+        return { ...sx, [q.stat]: newXp - 100 };
+      }
+      return { ...sx, [q.stat]: newXp };
+    });
+
+    // Memory / History Engine Logic
+    setQuestHistoryStats(prev => ({ ...prev, [q.stat]: (prev[q.stat] || 0) + 1 }));
+    addLog(`Quest cleared: "${q.title}" · +${finalXp} XP · +${q.goldReward} GLD`, 'success');
+    setNotification(q);
+  });
+
+  useEventBus('*', (e) => {
+    // Avoid double logging QUEST_COMPLETED since it's already logged above with specific formatting
+    if (e.type === 'QUEST_COMPLETED') return;
+    
+    // Convert payload to a nice string if possible
+    let payloadStr = '';
+    try {
+      payloadStr = Object.entries(e.payload)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(' | ');
+    } catch {}
+    
+    addLog(`[${e.type}] ${payloadStr}`, 'info');
+  });
+
+  // ─ Quest handlers ─
+  const completeQuest = useCallback((id: string) => {
+    setQuests(prev => {
+      const qIndex = prev.findIndex(q => q.id === id);
+      if (qIndex === -1) return prev;
+      
+      const newQuests = [...prev];
+      const q = newQuests[qIndex];
+
+      if (!q.completed) {
+        newQuests[qIndex] = { ...q, completed: true };
+        EventBus.publish('QUEST_COMPLETED', { quest: q });
+      } else {
+        newQuests[qIndex] = { ...q, completed: false };
+        setGold(g => Math.max(0, g - q.goldReward));
+        setXp(x => Math.max(0, x - q.xpReward));
+        addLog(`Quest reset: "${q.title}"`, 'warning');
+      }
+      return newQuests;
+    });
+  }, [addLog]);
+
+  const allocateStat = useCallback((stat: string, amount: number) => {
+    if (amount > 0 && statPoints > 0) {
+      setStats(s => ({ ...s, [stat]: s[stat as keyof typeof s] + 1 }));
+      setStatPoints(p => p - 1);
+    } else if (amount < 0 && stats[stat as keyof typeof stats] > 10) { // Base stat is 10
+      setStats(s => ({ ...s, [stat]: s[stat as keyof typeof s] - 1 }));
+      setStatPoints(p => p + 1);
+    }
+  }, [statPoints, stats]);
+
+  const deleteQuest = useCallback((id: string, title: string) => {
+    setQuests(prev => prev.filter(q => q.id !== id));
+    addLog(`Quest removed: "${title}"`, 'warning');
+  }, [addLog]);
+
+  const addQuest = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nqTitle.trim()) return;
+    const q: Quest = {
+      id: 'q-' + Math.random().toString(36).substring(2, 9),
+      title: nqTitle, description: nqDesc || 'Complete the objective.',
+      type: nqType, stat: nqStat, xpReward: nqXp, goldReward: nqGold,
+      completed: false, createdAt: new Date().toISOString(),
+    };
+    setQuests(prev => [...prev, q]);
+    addLog(`New quest: [${nqType.toUpperCase()}] "${nqTitle}"`, 'info');
+    setNqTitle(''); setNqDesc('');
+    setShowNewQuest(false);
+  }, [nqTitle, nqDesc, nqType, nqStat, nqXp, nqGold, addLog]);
+
+  const purchaseItem = useCallback((id: string) => {
+    const item = shopItems.find(s => s.id === id);
+    if (!item) return;
+    if (gold >= item.cost) {
+      setGold(g => g - item.cost);
+      addLog(`Reward purchased: "${item.title}" · -${item.cost} GLD`, 'success');
+    } else {
+      addLog(`Not enough Gold: Need ${item.cost}, have ${gold}`, 'warning');
+    }
+  }, [gold, shopItems, addLog]);
+
+  const distributePoint = useCallback((stat: string) => {
+    if (statPoints > 0) {
+      setStats(s => ({ ...s, [stat]: (s as any)[stat] + 1 }));
+      setStatPoints(p => p - 1);
+      addLog(`Attribute upgraded: ${stat} +1`, 'info');
+    }
+  }, [statPoints, addLog]);
+
+  // ─ Render ─
+  return (
+    <>
+      {/* Boot Sequence */}
+      {showBoot && (
+        <BootSequence
+          level={level}
+          incompleteQuests={incompleteQuests}
+          onComplete={() => setShowBoot(false)}
+        />
+      )}
+
+      {/* Main Premium App */}
+      {!showBoot && (
+        <div className="premium-app">
+          {/* Top Bar */}
+          <TopBanner
+            questCount={quests.length}
+            incompleteQuests={incompleteQuests}
+            latestLog={latestLog}
+          />
+
+          {/* Main Layout */}
+          <div className="dashboard-grid">
+            {/* Sidebar */}
+            <Sidebar
+              level={level}
+              xp={xp}
+              xpNeeded={xpNeeded}
+              gold={gold}
+              rank={rank}
+              stats={stats}
+              statPoints={statPoints}
+              activeNav={activeNav}
+              onNavChange={setActiveNav}
+            />
+
+            {/* Center Content based on Route */}
+            {activeNav === 'dashboard' || activeNav === 'home' ? (
+              <>
+                <div className="center-column">
+                  <HeroSection
+                    level={level}
+                    xp={xp}
+                    xpNeeded={xpNeeded}
+                    rank={rank}
+                    stats={stats}
+                    totalPower={totalPower}
+                    streakDays={7}
+                    completedToday={completedToday}
+                    totalToday={totalToday}
+                  />
+                  <QuestSection
+                    quests={quests}
+                    gold={gold}
+                    onCompleteQuest={completeQuest}
+                    onDeleteQuest={deleteQuest}
+                    onOpenNewQuest={() => setShowNewQuest(true)}
+                  />
+                  <div style={{ marginTop: '20px' }}>
+                    <WorldEventConsole />
+                  </div>
+                </div>
+                <RightPanel
+                  gold={gold}
+                  shopItems={shopItems}
+                  onPurchase={purchaseItem}
+                  level={level}
+                  xp={xp}
+                />
+              </>
+            ) : activeNav === 'missions' || activeNav === 'quests' ? (
+              <div className="center-column full-width-panel">
+                <QuestSection
+                  quests={quests}
+                  gold={gold}
+                  onCompleteQuest={completeQuest}
+                  onDeleteQuest={deleteQuest}
+                  onOpenNewQuest={() => setShowNewQuest(true)}
+                />
+              </div>
+            ) : activeNav === 'guild' || activeNav === 'store' || activeNav === 'social' ? (
+              <div className="center-column full-width-panel">
+                <RightPanel
+                  gold={gold}
+                  shopItems={shopItems}
+                  onPurchase={purchaseItem}
+                  level={level}
+                  xp={xp}
+                />
+              </div>
+            ) : activeNav === 'equipment' || activeNav === 'inventory' ? (
+              <div className="center-column full-width-panel">
+                <PlaceholderView title="Equipment & Inventory" icon={<Sword size={40} />} />
+              </div>
+            ) : activeNav === 'skills' ? (
+              <div className="center-column full-width-panel">
+                <SkillGraph unlockedSkills={unlockedSkills} />
+              </div>
+            ) : activeNav === 'stats' ? (
+              <div className="center-column full-width-panel">
+                <StatsPanel 
+                  stats={stats} 
+                  statXp={statXp} 
+                  statPoints={statPoints} 
+                  onAllocate={allocateStat} 
+                />
+              </div>
+            ) : activeNav === 'map' || activeNav === 'worldmap' ? (
+              <div className="center-column full-width-panel">
+                <PlaceholderView title="World Map" icon={<MapPin size={40} />} />
+              </div>
+            ) : activeNav === 'settings' ? (
+              <div className="center-column full-width-panel">
+                <PlaceholderView title="System Settings" />
+              </div>
+            ) : null}
+          </div>
+
+          <BottomNav activeTab={activeNav} onTabChange={setActiveNav} />
+        </div>
+      )}
+
+      {/* Level Up Sequence */}
+      {showLevelUp && (
+        <LevelUpSequence
+          level={levelUpData}
+          onClose={() => setShowLevelUp(false)}
+        />
+      )}
+
+      {/* Quest Notification */}
+      {notification && (
+        <QuestNotification
+          quest={notification}
+          onDismiss={() => setNotification(null)}
+        />
+      )}
+
+      {/* New Quest Modal */}
+      {showNewQuest && (
+        <NewQuestModal
+          onClose={() => setShowNewQuest(false)}
+          onSubmit={addQuest}
+          title={nqTitle} setTitle={setNqTitle}
+          desc={nqDesc} setDesc={setNqDesc}
+          type={nqType} setType={setNqType}
+          stat={nqStat} setStat={setNqStat}
+          xp={nqXp} setXp={setNqXp}
+          gold={nqGold} setGold={setNqGold}
+        />
+      )}
+    </>
+  );
+}
