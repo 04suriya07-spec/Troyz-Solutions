@@ -6,6 +6,15 @@
 'use strict';
 
 // ============================================================
+// CONFIGURATION
+// ============================================================
+// To receive email notifications when a team member submits a brief:
+// 1. Visit https://web3forms.com and enter your email to get a free Access Key.
+// 2. Paste your Access Key below inside the quotes.
+const WEB3FORMS_ACCESS_KEY = ""; 
+
+
+// ============================================================
 // PROJECT DATA — Fetched & Enriched from GitHub
 // ============================================================
 const PROJECTS = [
@@ -835,9 +844,42 @@ function initForm() {
     saveBriefs();
     renderProjects();
 
+    // Send email notification if Web3Forms Access Key is set
+    if (WEB3FORMS_ACCESS_KEY) {
+      const proj = PROJECTS.find(x => x.id === projectId) || { name: projectId };
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `Troyz R&D: New Brief on ${proj.name}`,
+          from_name: 'Troyz R&D Hub',
+          name: name,
+          project: proj.name,
+          brief: brief,
+          trend_score: `${score}/100`,
+          trend_reason: reason || 'Not specified'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showToast('Brief submitted & email notification sent!', 'success');
+        } else {
+          console.error('Web3Forms Error:', data);
+          showToast('Brief saved. Email notification failed.', 'error');
+        }
+      })
+      .catch(err => {
+        console.error('Web3Forms Network Error:', err);
+        showToast('Brief saved. Check network connection for email.', 'error');
+      });
+    } else {
+      showToast('Brief saved to browser! Set WEB3FORMS_ACCESS_KEY in app.js for email delivery.', 'success');
+    }
+
     document.getElementById('submitForm').setAttribute('hidden', '');
     document.getElementById('submitSuccess').removeAttribute('hidden');
-    showToast('Brief submitted successfully!', 'success');
   });
 
   document.getElementById('submitAgainBtn').addEventListener('click', function () {
