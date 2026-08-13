@@ -235,6 +235,81 @@ const PROJECTS = [
     tags: ['FinTech', 'Backtesting', 'Python', 'Quant']
   },
   {
+    id: 'solo-levelling',
+    name: 'Solo Levelling System',
+    repo: 'Solo_Levelling',
+    githubUrl: 'https://github.com/04suriya07-spec/Solo_Levelling.git',
+    liveUrl: null,
+    language: 'TypeScript',
+    domain: 'platform',
+    description: 'A gamified self-improvement and life-simulation engine inspired by Solo Levelling. Features multi-agent AI brain coordination, narrative directors, daily quest loops, and active experience progression logs.',
+    trendScore: 92,
+    trendInsights: [
+      'Gamification in productivity apps increases daily active users (DAU) by over 40%',
+      'AI-driven custom narrative and agentic feedback is a rapidly growing design trend',
+      'Combines personal growth with role-playing dynamics for high retention',
+      'Strong potential for integration with smart wearables and task management suites'
+    ],
+    icon: '⚔️',
+    iconClass: 'card-icon-platform',
+    createdAt: '2026-08-13',
+    updatedAt: '2026-08-13',
+    openIssues: 0,
+    size: '—',
+    status: 'open',
+    tags: ['Gamification', 'AI Brain', 'TypeScript', 'Self Improvement']
+  },
+  {
+    id: 'ai-start-up',
+    name: 'AI Start Up Workspace',
+    repo: 'AI_Start_UP',
+    githubUrl: 'https://github.com/04suriya07-spec/AI_Start_UP.git',
+    liveUrl: null,
+    language: 'TypeScript',
+    domain: 'ai',
+    description: 'An interactive sandbox for starting, launching, and managing AI agent startups. Simulates market response, agent-to-agent negotiation, and startup validation metrics.',
+    trendScore: 95,
+    trendInsights: [
+      'Agentic startups and agent teams are predicted to run 30% of micro-SaaS businesses by 2028',
+      'Autonomous simulation platforms are highly sought after by venture capital for rapid validation',
+      'TypeScript-based node coordination offers secure, structured execution patterns',
+      'Integrates easily with standard LLM providers (OpenAI, Anthropic) for autonomous operation'
+    ],
+    icon: '🚀',
+    iconClass: 'card-icon-ai',
+    createdAt: '2026-08-13',
+    updatedAt: '2026-08-13',
+    openIssues: 0,
+    size: '—',
+    status: 'open',
+    tags: ['AI Agents', 'Startup Simulation', 'TypeScript', 'LLM Node']
+  },
+  {
+    id: 'video-editing-tool',
+    name: 'Video Editing Tool & Pipeline',
+    repo: 'Video_Editing_Tool',
+    githubUrl: 'https://github.com/04suriya07-spec/Video_Editing_Tool.git',
+    liveUrl: null,
+    language: 'Python',
+    domain: 'platform',
+    description: 'A automated Python video editing pipeline with multi-container docker-compose support. Designed for programmatic media processing, rendering, and content optimization.',
+    trendScore: 87,
+    trendInsights: [
+      'Automated video creation and editing APIs are growing at a 32% CAGR',
+      'Dockerized media containers simplify serverless deployment on AWS or GCP',
+      'Python is the industry standard for scientific and media manipulation packages (FFmpeg wrapper)',
+      'High utility for programmatic video generators, social media pipelines, and dynamic ads'
+    ],
+    icon: '🎬',
+    iconClass: 'card-icon-platform',
+    createdAt: '2026-08-13',
+    updatedAt: '2026-08-13',
+    openIssues: 0,
+    size: '—',
+    status: 'open',
+    tags: ['Video Pipeline', 'Python', 'Docker', 'Automation']
+  },
+  {
     id: 'other-projects',
     name: 'Other Projects',
     repo: null,
@@ -262,6 +337,39 @@ const PROJECTS = [
 ];
 
 // ============================================================
+// DEFAULT R&D BRIEFS (PRE-POPULATED ANALYSES)
+// ============================================================
+const DEFAULT_BRIEFS = {
+  'solo-levelling': [
+    {
+      author: 'Troyz R&D Team',
+      text: 'A highly engaging gamified productivity system. The implementation of custom narrative arcs (like the Awakening arc) and AI-driven feedback loops dramatically improves daily retention odds. We should expand the reality graph engine to support integrations with popular IDEs (VS Code, Cursor) to track coding tasks as real quests.',
+      score: 92,
+      reason: 'Gamification is seeing a massive resurgence in developer tooling, with narrative-driven systems scoring extremely high on user retention studies.',
+      date: 'Aug 13, 2026'
+    }
+  ],
+  'ai-start-up': [
+    {
+      author: 'Troyz R&D Team',
+      text: 'Autonomous multi-agent startup simulation sandbox. This project contains excellent infrastructure for simulating business operations, customer interactions, and agent negotiations. Recommend adding an automated financial ledger and mock marketing channel APIs to test agent pivot decisions under constraint.',
+      score: 95,
+      reason: 'Agentic startup simulations are the hottest vertical in enterprise sandbox environments, representing a massive B2B software opportunity.',
+      date: 'Aug 13, 2026'
+    }
+  ],
+  'video-editing-tool': [
+    {
+      author: 'Troyz R&D Team',
+      text: 'Programmatic video processing and editing pipeline. The Docker Compose setup is highly containerized and modular. Suggest adding GPU-accelerated rendering configurations (NVIDIA Container Toolkit runtime) and an automated metadata-driven layout generator to support batch short-form content output.',
+      score: 87,
+      reason: 'Automated video rendering is key for scaling short-form organic marketing pipelines, where rendering latency is the primary production bottleneck.',
+      date: 'Aug 13, 2026'
+    }
+  ]
+};
+
+// ============================================================
 // STATE
 // ============================================================
 let state = {
@@ -269,7 +377,10 @@ let state = {
   lang: 'all',
   status: 'all',
   search: '',
-  briefs: JSON.parse(localStorage.getItem('troyz_briefs') || '{}'),
+  briefs: {
+    ...DEFAULT_BRIEFS,
+    ...JSON.parse(localStorage.getItem('troyz_briefs') || '{}')
+  },
   claimed: JSON.parse(localStorage.getItem('troyz_claimed') || '{}'),
 };
 
